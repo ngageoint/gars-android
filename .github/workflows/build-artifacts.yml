@@ -1,0 +1,48 @@
+name: Build Artifacts
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v1
+    - name: set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - name: Build with Gradle
+      run: ./gradlew gars:build -x lint
+    - name: Copy Release Artifacts
+      run: |
+        mkdir gars/build/release
+        cp gars/build/libs/*.jar gars/build/outputs/aar/*release.aar gars/build/release/
+        grep "version =" gars/build.gradle | sed 's/[a-z ="]//g' > VERSION
+        mv gars/build/release/*.aar gars/build/release/gars-android-$(cat VERSION).aar
+    - name: Build App with Gradle
+      run: ./gradlew app:assembleRelease -PRELEASE_MAPS_GARS_API_KEY=${{ secrets.RELEASE_MAPS_GARS_API_KEY }}
+    - name: Sign APK
+      uses: r0adkll/sign-android-release@v1
+      with:
+        releaseDirectory: app/build/outputs/apk/release
+        signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+        alias: ${{ secrets.ALIAS }}
+        keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+        keyPassword: ${{ secrets.KEY_PASSWORD }}
+    - name: Copy Release Artifacts
+      run: |
+        grep "version =" gars/build.gradle | sed 's/[a-z ="]//g' > VERSION
+        cp app/build/outputs/apk/release/app-*-signed.apk "gars/build/release/gars-$(cat VERSION).apk"
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: gars-android
+        path: gars/build/release
