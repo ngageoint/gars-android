@@ -37,15 +37,12 @@ import mil.nga.gars.GARS;
 import mil.nga.gars.features.Point;
 import mil.nga.gars.grid.GridType;
 import mil.nga.gars.grid.style.Grid;
-import mil.nga.gars.grid.style.Grids;
 import mil.nga.gars.tile.GARSTileProvider;
 import mil.nga.gars.tile.TileUtils;
-import mil.nga.gars.utm.UTM;
 
 /**
  * GARS Example Application
  *
- * @author wnewman
  * @author osbornb
  */
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnCameraIdleListener, GoogleMap.OnMapClickListener {
@@ -157,10 +154,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
         coordinateFormatter.setRoundingMode(RoundingMode.HALF_UP);
 
-        Grids grids = Grids.create();
-        grids.setLabelMinZoom(GridType.GZD, 3);
-
-        tileProvider = GARSTileProvider.create(this, grids);
+        tileProvider = GARSTileProvider.create(this);
     }
 
     /**
@@ -282,7 +276,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     /**
-     * Search and move to the coordiante
+     * Search and move to the coordinate
      *
      * @param coordinate GARS, UTM, or WGS84 coordinate
      */
@@ -296,15 +290,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (GARS.isGARS(coordinate)) {
                 GARS gars = GARS.parse(coordinate);
                 GridType gridType = GARS.precision(coordinate);
-                if (gridType == GridType.GZD) {
-                    point = gars.getGridZone().getBounds().getSouthwest();
-                } else {
-                    point = gars.toPoint();
-                }
+                point = gars.toPoint();
                 searchGARSResult = coordinate.toUpperCase();
                 zoom = garsCoordinateZoom(gridType, currentZoom);
-            } else if (UTM.isUTM(coordinate)) {
-                point = UTM.parse(coordinate).toPoint();
             } else {
                 String[] parts = coordinate.split("\\s*,\\s*");
                 if (parts.length == 2) {
@@ -352,12 +340,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (zoom < minZoom) {
             garsZoom = minZoom;
         } else {
-            Integer maxZoom;
-            if (gridType == GridType.GZD) {
-                maxZoom = tileProvider.getGrid(GridType.HUNDRED_KILOMETER).getMinZoom() - 1;
-            } else {
-                maxZoom = grid.getLinesMaxZoom();
-            }
+            Integer maxZoom = grid.getLinesMaxZoom();
             if (maxZoom != null && zoom >= maxZoom + 1) {
                 garsZoom = maxZoom;
             }
