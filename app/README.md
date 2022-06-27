@@ -4,7 +4,9 @@
 
 The GARS App provides a Global Area Reference System map using the [gars-android](https://github.com/ngageoint/gars-android) library.
 
-TODO
+<img src="https://user-images.githubusercontent.com/11667761/176018115-59616333-8071-497c-8569-3ecaa7b7a339.png" width="250">   <img src="https://user-images.githubusercontent.com/11667761/176018159-d342af61-e11c-4d1a-8391-fb1bff81a77b.png" width="250">
+
+<img src="https://user-images.githubusercontent.com/11667761/176018190-b44b7d97-139e-4739-a52e-c12129900c2f.png" width="250">   <img src="https://user-images.githubusercontent.com/11667761/176018204-1c22c978-4d74-41f6-8f8e-d1bc75522ca1.png" width="250">
 
 ### Build ###
 
