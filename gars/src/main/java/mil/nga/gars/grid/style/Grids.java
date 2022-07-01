@@ -7,13 +7,13 @@ import android.graphics.Paint;
 import java.util.Collection;
 import java.util.List;
 
-import mil.nga.gars.color.Color;
-import mil.nga.gars.features.Bounds;
-import mil.nga.gars.features.Line;
+import mil.nga.gars.features.GridLine;
+import mil.nga.gars.grid.GridLabel;
 import mil.nga.gars.grid.GridType;
-import mil.nga.gars.grid.Label;
-import mil.nga.gars.tile.GARSTile;
 import mil.nga.gars.tile.TileDraw;
+import mil.nga.grid.color.Color;
+import mil.nga.grid.features.Bounds;
+import mil.nga.grid.tile.GridTile;
 
 /**
  * Grids with Android specific styling
@@ -120,7 +120,7 @@ public class Grids extends mil.nga.gars.grid.Grids {
         Bitmap bitmap = null;
         ZoomGrids zoomGrids = getGrids(zoom);
         if (zoomGrids.hasGrids()) {
-            bitmap = drawTile(GARSTile.create(tileWidth, tileHeight, x, y, zoom), zoomGrids);
+            bitmap = drawTile(GridTile.tile(tileWidth, tileHeight, x, y, zoom), zoomGrids);
         }
         return bitmap;
     }
@@ -134,20 +134,20 @@ public class Grids extends mil.nga.gars.grid.Grids {
      * @return bitmap tile
      */
     public Bitmap drawTile(int tileWidth, int tileHeight, Bounds bounds) {
-        return drawTile(GARSTile.create(tileWidth, tileHeight, bounds));
+        return drawTile(GridTile.tile(tileWidth, tileHeight, bounds));
     }
 
     /**
      * Draw the tile
      *
-     * @param garsTile tile
+     * @param gridTile tile
      * @return bitmap tile
      */
-    public Bitmap drawTile(GARSTile garsTile) {
+    public Bitmap drawTile(GridTile gridTile) {
         Bitmap bitmap = null;
-        ZoomGrids zoomGrids = getGrids(garsTile.getZoom());
+        ZoomGrids zoomGrids = getGrids(gridTile.getZoom());
         if (zoomGrids.hasGrids()) {
-            bitmap = drawTile(garsTile, zoomGrids);
+            bitmap = drawTile(gridTile, zoomGrids);
         }
         return bitmap;
     }
@@ -155,27 +155,27 @@ public class Grids extends mil.nga.gars.grid.Grids {
     /**
      * Draw the tile
      *
-     * @param garsTile  GARS tile
+     * @param gridTile  tile
      * @param zoomGrids zoom grids
      * @return bitmap tile
      */
-    private Bitmap drawTile(GARSTile garsTile, ZoomGrids zoomGrids) {
+    private Bitmap drawTile(GridTile gridTile, ZoomGrids zoomGrids) {
 
-        Bitmap bitmap = Bitmap.createBitmap(garsTile.getWidth(), garsTile.getHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(gridTile.getWidth(), gridTile.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
 
         for (Grid grid : zoomGrids.grids()) {
 
             Paint labelPaint = grid.getLabelPaint();
 
-            List<Line> lines = grid.getLines(garsTile);
+            List<GridLine> lines = grid.getLines(gridTile);
             if (lines != null) {
-                TileDraw.drawLines(lines, garsTile, grid, canvas);
+                TileDraw.drawLines(lines, gridTile, grid, canvas);
             }
 
-            List<Label> labels = grid.getLabels(garsTile);
+            List<GridLabel> labels = grid.getLabels(gridTile);
             if (labels != null) {
-                TileDraw.drawLabels(labels, grid.getLabelBuffer(), garsTile, canvas, labelPaint);
+                TileDraw.drawLabels(labels, grid.getLabelBuffer(), gridTile, canvas, labelPaint);
             }
 
         }

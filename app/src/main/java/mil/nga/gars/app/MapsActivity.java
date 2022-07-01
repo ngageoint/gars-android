@@ -34,11 +34,11 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 
 import mil.nga.gars.GARS;
-import mil.nga.gars.features.Point;
 import mil.nga.gars.grid.GridType;
 import mil.nga.gars.grid.style.Grid;
 import mil.nga.gars.tile.GARSTileProvider;
 import mil.nga.gars.tile.TileUtils;
+import mil.nga.grid.features.Point;
 
 /**
  * GARS Example Application
@@ -296,7 +296,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             } else {
                 String[] parts = coordinate.split("\\s*,\\s*");
                 if (parts.length == 2) {
-                    point = Point.create(Double.parseDouble(parts[0]), Double.parseDouble(parts[1]));
+                    point = Point.point(Double.parseDouble(parts[0]), Double.parseDouble(parts[1]));
                 }
             }
         } catch (Exception e) {

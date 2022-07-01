@@ -7,10 +7,14 @@ import android.graphics.Rect;
 
 import java.util.List;
 
-import mil.nga.gars.features.Line;
-import mil.nga.gars.features.Point;
-import mil.nga.gars.grid.Label;
+import mil.nga.gars.features.GridLine;
+import mil.nga.gars.grid.GridLabel;
 import mil.nga.gars.grid.style.Grid;
+import mil.nga.grid.features.Line;
+import mil.nga.grid.features.Point;
+import mil.nga.grid.tile.GridTile;
+import mil.nga.grid.tile.Pixel;
+import mil.nga.grid.tile.PixelRange;
 
 /**
  * Tile draw utilities for lines and labels
@@ -27,9 +31,9 @@ public class TileDraw {
      * @param grid   grid
      * @param canvas draw canvas
      */
-    public static void drawLines(List<Line> lines, GARSTile tile, Grid grid, Canvas canvas) {
+    public static void drawLines(List<GridLine> lines, GridTile tile, Grid grid, Canvas canvas) {
 
-        for (Line line : lines) {
+        for (GridLine line : lines) {
 
             Path linePath = new Path();
             addPolyline(tile, linePath, line);
@@ -47,11 +51,11 @@ public class TileDraw {
      * @param path line path
      * @param line line to draw
      */
-    private static void addPolyline(GARSTile tile, Path path, Line line) {
+    private static void addPolyline(GridTile tile, Path path, GridLine line) {
 
-        line = line.toMeters();
-        Point point1 = line.getPoint1();
-        Point point2 = line.getPoint2();
+        Line metersLine = line.toMeters();
+        Point point1 = metersLine.getPoint1();
+        Point point2 = metersLine.getPoint2();
 
         Pixel pixel = point1.getPixel(tile);
         path.moveTo(pixel.getX(), pixel.getY());
@@ -70,8 +74,8 @@ public class TileDraw {
      * @param canvas draw canvas
      * @param paint  label paint
      */
-    public static void drawLabels(List<Label> labels, double buffer, GARSTile tile, Canvas canvas, Paint paint) {
-        for (Label label : labels) {
+    public static void drawLabels(List<GridLabel> labels, double buffer, GridTile tile, Canvas canvas, Paint paint) {
+        for (GridLabel label : labels) {
             drawLabel(label, buffer, tile, canvas, paint);
         }
     }
@@ -85,7 +89,7 @@ public class TileDraw {
      * @param canvas draw canvas
      * @param paint  label paint
      */
-    public static void drawLabel(Label label, double buffer, GARSTile tile, Canvas canvas, Paint paint) {
+    public static void drawLabel(GridLabel label, double buffer, GridTile tile, Canvas canvas, Paint paint) {
 
         String name = label.getName();
 

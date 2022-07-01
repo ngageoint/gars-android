@@ -398,7 +398,7 @@ public class GARSTileProvider implements TileProvider {
      * @return GARS
      */
     public GARS getGARS(LatLng latLng) {
-        return TileUtils.toPoint(latLng).toGARS();
+        return GARS.from(TileUtils.toPoint(latLng));
     }
 
     /**

@@ -6,9 +6,9 @@ import android.graphics.Typeface;
 import java.util.HashMap;
 import java.util.Map;
 
-import mil.nga.gars.color.Color;
+import mil.nga.gars.grid.GridLabeler;
 import mil.nga.gars.grid.GridType;
-import mil.nga.gars.grid.Labeler;
+import mil.nga.grid.color.Color;
 
 /**
  * Grid with Android specific styling
@@ -18,7 +18,7 @@ public class Grid extends mil.nga.gars.grid.Grid {
     /**
      * Grid line paint by grid type
      */
-    private Map<GridType, Paint> linePaint = new HashMap<>();
+    private final Map<GridType, Paint> linePaint = new HashMap<>();
 
     /**
      * Grid label paint
@@ -174,7 +174,7 @@ public class Grid extends mil.nga.gars.grid.Grid {
      * @return grid label paint, null if no labeler
      */
     public Paint createLabelPaint() {
-        Labeler labeler = getLabeler();
+        GridLabeler labeler = getLabeler();
         if (labeler != null) {
             labelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             labelPaint.setColor(labeler.getColor().getColorWithAlpha());
