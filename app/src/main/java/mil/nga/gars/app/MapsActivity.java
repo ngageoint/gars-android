@@ -278,7 +278,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * Search and move to the coordinate
      *
-     * @param coordinate GARS, UTM, or WGS84 coordinate
+     * @param coordinate GARS or WGS84 coordinate
      */
     private void search(String coordinate) {
         searchGARSResult = null;
