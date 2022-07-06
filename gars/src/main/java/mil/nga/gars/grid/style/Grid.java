@@ -6,9 +6,9 @@ import android.graphics.Typeface;
 import java.util.HashMap;
 import java.util.Map;
 
+import mil.nga.color.Color;
 import mil.nga.gars.grid.GridLabeler;
 import mil.nga.gars.grid.GridType;
-import mil.nga.grid.color.Color;
 
 /**
  * Grid with Android specific styling

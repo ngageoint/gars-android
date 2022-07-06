@@ -18,11 +18,11 @@ import org.junit.runner.RunWith;
 
 import java.util.Set;
 
+import mil.nga.color.Color;
 import mil.nga.gars.GARS;
 import mil.nga.gars.grid.GridType;
 import mil.nga.gars.grid.style.Grids;
 import mil.nga.gars.tile.GARSTileProvider;
-import mil.nga.grid.color.Color;
 
 /**
  * README example tests
