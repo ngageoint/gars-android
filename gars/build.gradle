@@ -4,15 +4,15 @@ apply plugin: 'signing'
 
 group = "mil.nga.gars"
 archivesBaseName = "gars-android"
-version = "1.0.1"
+version = "1.1.0"
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
     namespace 'mil.nga.gars'
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 32
+        targetSdkVersion 33
     }
 
     configurations {

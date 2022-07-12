@@ -100,9 +100,9 @@ GARSTileProvider tileProvider = GARSTileProvider.create(context, grids);
 
 ### Installation ###
 
-Pull from the [Maven Central Repository](http://search.maven.org/#artifactdetails|mil.nga.gars|gars-android|1.0.0|aar) (AAR, POM, Source, Javadoc)
+Pull from the [Maven Central Repository](http://search.maven.org/#artifactdetails|mil.nga.gars|gars-android|1.1.0|aar) (AAR, POM, Source, Javadoc)
 
-    api 'mil.nga.gars:gars-android:1.0.0'
+    api 'mil.nga.gars:gars-android:1.1.0'
 
 ### Build ###
 
@@ -125,7 +125,7 @@ Include as repositories in your project build.gradle:
 
 Include the dependency in your module build.gradle with desired version number:
 
-    api 'mil.nga.gars:gars-android:1.0.0'
+    api 'mil.nga.gars:gars-android:1.1.0'
 
 As part of the build process, run the "publishToMavenLocal" task on the gars-android Gradle script to update the Maven local repository.
 
