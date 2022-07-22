@@ -4,7 +4,7 @@ apply plugin: 'signing'
 
 group = "mil.nga.gars"
 archivesBaseName = "gars-android"
-version = "1.1.1"
+version = "1.2.0"
 
 android {
     compileSdkVersion 33
@@ -149,7 +149,7 @@ afterEvaluate {
 }
 
 dependencies {
-    api 'com.google.android.gms:play-services-maps:18.0.2'
-    api 'mil.nga:gars:1.0.0'
-    javadocDeps 'mil.nga:gars:1.0.0'
+    api 'com.google.android.gms:play-services-maps:18.1.0'
+    api 'mil.nga:gars:1.1.0'
+    javadocDeps 'mil.nga:gars:1.1.0'
 }
