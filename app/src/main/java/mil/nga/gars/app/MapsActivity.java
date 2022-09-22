@@ -5,16 +5,15 @@ import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -31,7 +30,6 @@ import com.google.android.gms.maps.model.TileOverlayOptions;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 
 import mil.nga.gars.GARS;
 import mil.nga.gars.grid.GridType;
@@ -73,29 +71,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private TextView zoomLabel;
 
     /**
-     * Search button
-     */
-    private ImageButton searchButton;
-
-    /**
      * Search GARS result
      */
     private String searchGARSResult = null;
 
     /**
-     * Map type button
-     */
-    private ImageButton mapTypeButton;
-
-    /**
      * Coordinate label formatter
      */
-    private DecimalFormat coordinateFormatter = new DecimalFormat("0.0####");
+    private final DecimalFormat coordinateFormatter = new DecimalFormat("0.0####");
 
     /**
      * Zoom level label formatter
      */
-    private DecimalFormat zoomFormatter = new DecimalFormat("0.0");
+    private final DecimalFormat zoomFormatter = new DecimalFormat("0.0");
 
     /**
      * GARS tile provider
@@ -111,46 +99,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
 
-        garsLabel = (TextView) findViewById(R.id.gars);
-        wgs84Label = (TextView) findViewById(R.id.wgs84);
-        zoomLabel = (TextView) findViewById(R.id.zoom);
+        garsLabel = findViewById(R.id.gars);
+        wgs84Label = findViewById(R.id.wgs84);
+        zoomLabel = findViewById(R.id.zoom);
         zoomFormatter.setRoundingMode(RoundingMode.DOWN);
-        searchButton = (ImageButton) findViewById(R.id.search);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onSearchClick(v);
-            }
+        ImageButton searchButton = findViewById(R.id.search);
+        searchButton.setOnClickListener(v -> onSearchClick());
+        ImageButton mapTypeButton = findViewById(R.id.mapType);
+        mapTypeButton.setOnClickListener(v -> onMapTypeClick());
+        garsLabel.setOnLongClickListener(v -> {
+            copyToClipboard(getString(R.string.gars_label), garsLabel.getText());
+            return true;
         });
-        mapTypeButton = (ImageButton) findViewById(R.id.mapType);
-        mapTypeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onMapTypeClick(v);
-            }
+        wgs84Label.setOnLongClickListener(v -> {
+            copyToClipboard(getString(R.string.wgs84_label), wgs84Label.getText());
+            return true;
         });
-        garsLabel.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                copyToClipboard(getString(R.string.gars_label), garsLabel.getText());
-                return true;
-            }
-        });
-        wgs84Label.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                copyToClipboard(getString(R.string.wgs84_label), wgs84Label.getText());
-                return true;
-            }
-        });
-        zoomLabel.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                copyToClipboard(getString(R.string.zoom_label), zoomLabel.getText());
-                return true;
-            }
+        zoomLabel.setOnLongClickListener(v -> {
+            copyToClipboard(getString(R.string.zoom_label), zoomLabel.getText());
+            return true;
         });
         coordinateFormatter.setRoundingMode(RoundingMode.HALF_UP);
 
@@ -161,7 +132,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * {@inheritDoc}
      */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
         map = googleMap;
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.getUiSettings().setZoomControlsEnabled(true);
@@ -179,7 +150,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         CameraPosition cameraPosition = map.getCameraPosition();
         LatLng center = cameraPosition.target;
         float zoom = cameraPosition.zoom;
-        String gars = null;
+        String gars;
         if (searchGARSResult != null) {
             gars = searchGARSResult;
             searchGARSResult = null;
@@ -197,16 +168,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * {@inheritDoc}
      */
     @Override
-    public void onMapClick(LatLng latLng) {
+    public void onMapClick(@NonNull LatLng latLng) {
         map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 
     /**
      * Handle map type click
-     *
-     * @param v view
      */
-    private void onMapTypeClick(View v) {
+    private void onMapTypeClick() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.map_type_title);
@@ -219,11 +188,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         getString(R.string.map_type_terrain),
                         getString(R.string.map_type_hybrid)},
                 map.getMapType() - 1,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int item) {
-                        map.setMapType(item + 1);
-                        dialog.dismiss();
-                    }
+                (dialog, item) -> {
+                    map.setMapType(item + 1);
+                    dialog.dismiss();
                 }
         );
 
@@ -249,28 +216,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Handle search click
-     *
-     * @param v view
      */
-    private void onSearchClick(View v) {
+    private void onSearchClick() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.search_title);
         final EditText input = new EditText(this);
         input.setSingleLine();
         builder.setView(input);
 
-        builder.setPositiveButton(R.string.search, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                search(input.getText().toString());
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        builder.setPositiveButton(R.string.search, (dialog, which) -> search(input.getText().toString()));
+        builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.cancel());
 
         builder.show();
     }
@@ -308,7 +263,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (searchGARSResult == null) {
                 searchGARSResult = tileProvider.getCoordinate(latLng, (int) currentZoom);
             }
-            CameraUpdate update = null;
+            CameraUpdate update;
             if (zoom != null) {
                 update = CameraUpdateFactory.newLatLngZoom(latLng, zoom);
             } else {
@@ -331,9 +286,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * @param gridType grid type precision
      * @param zoom     current zoom
      * @return zoom level or null
-     * @throws ParseException upon failure to parse coordinate
      */
-    private Integer garsCoordinateZoom(GridType gridType, float zoom) throws ParseException {
+    private Integer garsCoordinateZoom(GridType gridType, float zoom) {
         Integer garsZoom = null;
         Grid grid = tileProvider.getGrid(gridType);
         int minZoom = grid.getLinesMinZoom();
@@ -370,8 +324,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * {@inheritDoc}
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             return;
