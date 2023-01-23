@@ -4,6 +4,10 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
+## 1.2.3 (TBD)
+
+* TBD
+
 ## [1.2.2](https://github.com/ngageoint/gars-android/releases/tag/1.2.2) (01-23-2023)
 
 * gars-java version 1.1.2
