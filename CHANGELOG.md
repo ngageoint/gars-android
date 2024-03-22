@@ -6,7 +6,10 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ## 1.2.3 (TBD)
 
-* TBD
+* compile and target SDK version 34
+* gars-java version 1.1.3
+* play-services-maps version 18.2.0
+* gradle plugin updated to 8.3.1
 
 ## [1.2.2](https://github.com/ngageoint/gars-android/releases/tag/1.2.2) (01-23-2023)
 
